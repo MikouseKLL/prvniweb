@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Mini Geometry Dash</title>
+<style>
+    body {
+        margin: 0;
+        background: #111;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    #game {
+        position: relative;
+        width: 800px;
+        height: 200px;
+        background: #1e1e1e;
+        overflow: hidden;
+        border: 4px solid #00ffff;
+    }
+
+    #player {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: #00ffff;
+        bottom: 0;
+        left: 50px;
+    }
+
+    .jump {
+        animation: jump 0.5s ease-out;
+    }
+
+    @keyframes jump {
+        0% { bottom: 0; }
+        50% { bottom: 100px; }
+        100% { bottom: 0; }
+    }
+
+    #obstacle {
+        position: absolute;
+        width: 30px;
+        height: 50px;
+        background: #ff0066;
+        bottom: 0;
+        right: -30px;
+        animation: move 2s linear infinite;
+    }
+
+    @keyframes move {
+        from { right: -30px; }
+        to { right: 830px; }
+    }
+
+    #text {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        font-size: 14px;
+    }
+</style>
+</head>
+<body>
+
+<div id="game">
+    <div id="text">Klikni nebo stiskni mezerník</div>
+    <div id="player"></div>
+    <div id="obstacle"></div>
+</div>
+
+<script>
+    const player = document.getElementById("player");
+    const obstacle = document.getElementById("obstacle");
+
+    function jump() {
+        if (!player.classList.contains("jump")) {
+            player.classList.add("jump");
+            setTimeout(() => player.classList.remove("jump"), 500);
+        }
+    }
+
+    document.addEventListener("keydown", e => {
+        if (e.code === "Space") jump();
+    });
+
+    document.addEventListener("click", jump);
+
+    setInterval(() => {
+        const playerBottom = parseInt(getComputedStyle(player).bottom);
+        const obstacleRight = parseInt(getComputedStyle(obstacle).right);
+
+        if (obstacleRight > 690 && obstacleRight < 730 && playerBottom < 40) {
+            alert("Game Over!");
+            location.reload();
+        }
+    }, 10);
+</script>
+
+</body>
+</html>

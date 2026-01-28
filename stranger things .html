@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Vecna – Stranger Things</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #e5e5e5;
+            background-image: url("images/upsidedown.webp");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .vecna-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 30px auto;
+        }
+
+        .vecna-wrapper img {
+            width: 100%;
+            display: block;
+
+            /* rough edges */
+            clip-path: polygon(
+                10%
+            );
+
+            /* red outline */
+            filter: drop-shadow(0 0 10px red);
+        }
+
+        /* hover overlay */
+        .vecna-wrapper::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: red;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            clip-path: inherit;
+        }
+
+        .vecna-wrapper:hover::after {
+            opacity: 0.1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff2b2b;
+            text-shadow: 0 0 10px red;
+        }
+
+        p {
+            line-height: 1.6;
+            font-size: 16px;
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Vecna</h1>
+
+        <div class="vecna-wrapper">
+            <img src="images/090737_0_1024x1024.webp"
+                 alt="Vecna – Stranger Things">
+        </div>
+
+        <p>
+            Vecna, narozený jako Henry Creel a odhalený jako Jednička, je fiktivní postava
+            z amerického seriálu Stranger Things vyrobeného společností Netflix.
+            Postavu ztvárňuje Jamie Campbell Bower a poprvé se objevil ve čtvrté řadě
+            jako bytost z obráceného světa, která své oběti pronásleduje děsivými
+            vizemi jejich traumat z minulosti a zabíjí je velmi brutálním způsobem.
+            V průběhu čtvrté řady se nakonec ukáže, že je vládcem obráceného světa
+            a také strůjcem všech událostí, které postihly město Hawkins, počínaje
+            zmizením Willa Byerse.
+        </p>
+    </div>
+
+</body>
+</html>

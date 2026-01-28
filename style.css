@@ -50,7 +50,6 @@ footer {
 margin: 0 10px; 
 text-decoration: none;
 opacity: 0.85;
-box-shadow: 0 0 10px black;
 }
 .footer-links a:hover { 
 background-color:aquamarine;

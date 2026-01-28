@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Mini Minecraft</title>
+
+<style>
+    body {
+        margin: 0;
+        background: black;
+        overflow: hidden;
+    }
+
+    canvas {
+        display: block;
+        margin: auto;
+        background: #87ceeb;
+        image-rendering: pixelated;
+    }
+
+    #ui {
+        color: white;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        padding: 6px;
+    }
+</style>
+</head>
+
+<body>
+
+<canvas id="game" width="640" height="480"></canvas>
+<div id="ui">
+    Pohyb: ← → ↑ | Klik = znič blok | Pravý klik = polož blok
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const tileSize = 32;
+const cols = 20;
+const rows = 15;
+
+// typy bloků
+const BLOCKS = {
+    AIR: 0,
+    GRASS: 1,
+    DIRT: 2,
+    STONE: 3
+};
+
+// barvy bloků
+const colors = {
+    1: "#3cb371",
+    2: "#8b4513",
+    3: "#808080"
+};
+
+// svět
+let world = [];
+for (let y = 0; y < rows; y++) {
+    world[y] = [];
+    for (let x = 0; x < cols; x++) {
+        if (y < 7) world[y][x] = BLOCKS.AIR;
+        else if (y === 7) world[y][x] = BLOCKS.GRASS;
+        else if (y < 11) world[y][x] = BLOCKS.DIRT;
+        else world[y][x] = BLOCKS.STONE;
+    }
+}
+
+// hráč
+const player = {
+    x: 5,
+    y: 5,
+    w: 24,
+    h: 24,
+    vx: 0,
+    vy: 0,
+    onGround: false
+};
+
+const gravity = 0.4;
+const keys = {};
+
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+// klikání na bloky
+canvas.addEventListener("contextmenu", e => e.preventDefault());
+
+canvas.addEventListener("mousedown", e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = Math.floor((e.clientX - rect.left) / tileSize);
+    const my = Math.floor((e.clientY - rect.top) / tileSize);
+
+    if (mx < 0 || my < 0 || mx >= cols || my >= rows) return;
+
+    if (e.button === 0) {
+        world[my][mx] = BLOCKS.AIR; // znič blok
+    } else if (e.button === 2) {
+        world[my][mx] = BLOCKS.DIRT; // polož blok
+    }
+});
+
+function drawWorld() {
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const block = world[y][x];
+            if (block !== BLOCKS.AIR) {
+                ctx.fillStyle = colors[block];
+                ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+            }
+        }
+    }
+}
+
+function drawPlayer() {
+    ctx.fillStyle = "blue";
+    ctx.fillRect(
+        player.x * tileSize + 4,
+        player.y * tileSize + 4,
+        player.w,
+        player.h
+    );
+}
+
+function updatePlayer() {
+    if (keys["ArrowLeft"]) player.vx = -0.15;
+    else if (keys["ArrowRight"]) player.vx = 0.15;
+    else player.vx = 0;
+
+    if (keys["ArrowUp"] && player.onGround) {
+        player.vy = -0.35;
+        player.onGround = false;
+    }
+
+    player.vy += gravity * 0.02;
+
+    player.x += player.vx;
+    player.y += player.vy;
+
+    // kolize se zemí
+    if (player.y + 1 >= rows || world[Math.floor(player.y + 1)][Math.floor(player.x)] !== BLOCKS.AIR) {
+        player.y = Math.floor(player.y);
+        player.vy = 0;
+        player.onGround = true;
+    }
+
+    if (player.x < 0) player.x = 0;
+    if (player.x > cols - 1) player.x = cols - 1;
+}
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    updatePlayer();
+    drawWorld();
+    drawPlayer();
+
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+
+</body>
+</html>
